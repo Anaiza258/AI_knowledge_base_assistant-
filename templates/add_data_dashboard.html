@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400..700&display=swap');
+
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            /* background-color: #d7d7d7; */
+            /* background: linear-gradient(to right, #2E2E2E, #373737); */
+            /* color: #e0e0e0; */
+            background: linear-gradient(124.14deg,rgba(255,252,243,0) 20%,rgba(255,252,243,0.2) 39.82%,rgba(255,252,243,0) 60%),radial-gradient(154% 102% at 85% 32.47%,rgba(255,252,243,0) 49.82%,rgba(230,148,247,0.6) 82.11%),radial-gradient(124% 129% at 35% 78.47%,rgba(255,252,243,0) 49.82%,rgba(255,252,243,0.6) 82.11%),radial-gradient(125% 178% at 25% 4.47%,rgba(255,252,243,0) 49.82%,rgba(255,252,243,0.6) 82.11%),radial-gradient(41.58% 150.68% at 26.01% 45.34%,rgba(255,252,243,0.6) 19.17%,rgba(255,252,243,0) 100%),linear-gradient(84.14deg,rgba(230,148,247,0.2) 2.84%,rgba(247,161,166,0.2) 118.515%),radial-gradient(50% 120% at 100% 14.47%,rgba(175,155,241,0) 6.9%,rgba(211,199,248,0.5) 52.84%,rgba(175,155,241,0) 100%),radial-gradient(56% 120% at 90% 112.47%,rgba(255,155,130,0) 26.9%,rgba(255,155,130,0.8) 72.84%,rgba(255,155,130,0) 100%),radial-gradient(35% 68% at 35% 84.47%,#ffaf9b 49.82%,rgba(251,211,199,0) 82.11%),linear-gradient(84.14deg,#e694f7 2.84%,#f7a1a6 118.515%);
+        
+        }
+
+        .form-container {
+            /* background-color: #222222; */
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            padding: 20px 30px;
+            /* padding: 40px; */
+
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            
+        }
+
+        .form-heading {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            color: #2240a5;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            /* background-color: #333333; */
+            /* color: #e0e0e0; */
+            /* border: 1px solid #444444; */
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-control:focus {
+            border-color: #00a8ff;
+            outline: none;
+        }
+
+        .btn-primary {
+            background-color: #00a8ff;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background-color: #0088cc;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 1rem;
+            text-align: center;
+            color: #00a8ff;
+        }
+
+        /* Table Styling */
+        .data-table-container {
+            margin-top: 50px;
+
+        }
+
+        .data-table-container table {
+            width: 100%;
+        }
+
+        .table th, .table td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <!-- Form Section -->
+        <div class="row justify-content-center">
+            <h1 class="form-heading">Add and Manage Data</h1>
+            <div class="form-container col-md-8 col-10-">
+                <form id="add-data-form" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="problem" class="form-label">Problem:</label>
+                                <textarea id="problem" name="problem" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="solution" class="form-label">Solution:</label>
+                                <textarea id="solution" name="solution" class="form-control" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date:</label>
+                                <input type="date" id="date" name="date" class="form-control" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Add Data</button>
+                                <a href="/logout" class="btn btn-danger">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="row justify-content-center data-table-container">
+            <div class="col-md-10 col-12">
+                <table id="dataTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Problem</th>
+                            <th>Solution</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data %}
+                        <tr data-index="{{ loop.index0 }}">
+                            <td>{{ row['Problems'] }}</td>
+                            <td>{{ row['Solutions'] }}</td>
+                            <td>{{ row['Date'] }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning editBtn">Edit</button>
+                                <button class="btn btn-sm btn-danger deleteBtn">Delete</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- offcanvas editing -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="editOffcanvas" aria-labelledby="editOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 id="editOffcanvasLabel">Edit Entry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form id="edit-form">
+            <div class="mb-3">
+                <label for="editProblem" class="form-label">Problem</label>
+                <textarea class="form-control" id="editProblem" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="editSolution" class="form-label">Solution</label>
+                <textarea class="form-control" id="editSolution" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="editDate" class="form-label">Date</label>
+                <input type="date" class="form-control" id="editDate">
+            </div>
+            <input type="hidden" id="editRowIndex">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+</div>
+<!-- modal popup for msg -->
+<div class="modal fade" id="editSuccessModal" tabindex="-1" aria-labelledby="editSuccessModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSuccessModalLabel">Success</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="editSuccessMessage">Your changes have been saved successfully!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+// with offcanvas editing
+$(document).ready(function () {
+    const table = $('#dataTable').DataTable({
+        "order": [[2, 'desc']],
+        "columnDefs": [
+            { "type": "date", "targets": 2 }
+        ]
+    });
+
+    // Handle Edit Button Click - Open Off-Canvas
+    $('#dataTable').on('click', '.editBtn', function () {
+        const row = $(this).closest('tr');
+        const rowIndex = table.row(row).index(); // Get row index
+
+        // Get current values from table
+        const problem = row.find('td:eq(0)').text();
+        const solution = row.find('td:eq(1)').text();
+        const date = row.find('td:eq(2)').text(); 
+
+        // Populate the off-canvas form
+        $('#editProblem').val(problem);
+        $('#editSolution').val(solution);
+        $('#editDate').val(date);
+        $('#editRowIndex').val(rowIndex); // Store row index in hidden field
+
+        // Open the off-canvas
+        const offCanvas = new bootstrap.Offcanvas(document.getElementById('editOffcanvas'));
+        offCanvas.show();
+    });
+
+    // Handle Form Submission for Editing (With AJAX)
+    $('#edit-form').on('submit', function (e) {
+        e.preventDefault();
+        const rowIndex = $('#editRowIndex').val();
+        const problem = $('#editProblem').val();
+        const solution = $('#editSolution').val();
+        const date = $('#editDate').val();
+
+        if (problem && solution && date) {
+            $.ajax({
+                url: '/add_data',  // Backend route for editing
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ action: 'edit', rowIndex, problem, solution, date }),
+                success: function (response) {
+                    // alert(response.message);
+                     // bootstrap alert msg for success
+                     $('#editAlert').removeClass('d-none alert-danger').addClass('alert-success').text(response.message);
+
+
+                    // Update the table row dynamically
+                    table.cell(rowIndex, 0).data(problem).draw();
+                    table.cell(rowIndex, 1).data(solution).draw();
+                    table.cell(rowIndex, 2).data(date).draw();
+
+                    // Close the off-canvas after saving
+                    const offCanvasEl = document.getElementById('editOffcanvas');
+                    const offCanvasInstance = bootstrap.Offcanvas.getInstance(offCanvasEl);
+                    offCanvasInstance.hide();
+
+                    // uupdate modal message and show the modal
+                    $('#editSuccessMessage').text(response.message);
+                    const successModal = new bootstrap.Modal(document.getElementById('editSuccessModal'));
+                    successModal.show();
+
+                },
+                error: function (xhr) {
+                    alert('Error: ' + xhr.responseJSON.message);
+                }
+            });
+        }
+    });
+
+    // Handle Add Data Form Submission (With AJAX)
+    $('#add-data-form').on('submit', function (e) {
+        e.preventDefault();
+        const problem = $('#problem').val();
+        const solution = $('#solution').val();
+        const date = $('#date').val();
+
+        $.ajax({
+            url: '/add_data',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ action: 'add', problem, solution, date }),
+            success: function (response) {
+                alert(response.message);
+
+                // Dynamically add the new row to DataTable without reload
+                const rowNode = table.row.add([
+                    problem,
+                    solution,
+                    date,
+                    `<button class="btn btn-sm btn-warning editBtn">Edit</button>
+                    <button class="btn btn-sm btn-danger deleteBtn">Delete</button>`
+                ]).draw(false).node();
+
+                // Reset form fields
+                $('#add-data-form')[0].reset();
+            },
+            error: function (xhr) {
+                alert('Error: ' + xhr.responseJSON.message);
+            }
+        });
+    });
+
+    // Handle Delete Button Click
+    $('#dataTable').on('click', '.deleteBtn', function () {
+        const row = $(this).closest('tr');
+        const rowIndex = table.row(row).index(); // Get row index
+
+        if (confirm('Are you sure you want to delete this entry?')) {
+            $.ajax({
+                url: '/add_data',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ action: 'delete', rowIndex }),
+                success: function (response) {
+                    alert(response.message);
+                    table.row(rowIndex).remove().draw(); // Remove row dynamically
+                },
+                error: function (xhr) {
+                    alert('Error: ' + xhr.responseJSON.message);
+                }
+            });
+        }
+    });
+});
+
+// with prompt Alert editing///////////
+// $(document).ready(function () {
+//     const table = $('#dataTable').DataTable({
+//         "order": [[2, 'desc']],
+//         "columnDefs": [
+//             { "type": "date", "targets": 2 } // Ensure column type is date
+//         ]
+//     });
+
+//     // Handle form submission (Add data)
+//     $('#add-data-form').on('submit', function (e) {
+//         e.preventDefault();
+//         const problem = $('#problem').val();
+//         const solution = $('#solution').val();
+//         const date = $('#date').val();
+
+//         $.ajax({
+//             url: '/add_data',
+//             method: 'POST',
+//             contentType: 'application/json',
+//             data: JSON.stringify({ action: 'add', problem, solution, date }),
+//             success: function (response) {
+//                 alert(response.message);
+
+//                 // Dynamically add the new row to DataTable without reload
+//                 const rowNode = table.row.add([
+//                     problem,
+//                     solution,
+//                     date,
+//                     `<button class="btn btn-sm btn-warning editBtn">Edit</button>
+//                     <button class="btn btn-sm btn-danger deleteBtn">Delete</button>`
+//                 ]).draw(false).node();
+
+//                 // After adding the row, DataTable will automatically reorder it
+                
+//                 // Reset form fields
+//                 $('#add-data-form')[0].reset();
+//             },
+//             error: function (xhr) {
+//                 alert('Error: ' + xhr.responseJSON.message);
+//             }
+//         });
+//     });
+
+//     // Handle edit button click
+//     $('#dataTable').on('click', '.editBtn', function () {
+//         const row = $(this).closest('tr');
+//         const rowIndex = table.row(row).index(); // Get the correct index for the row
+//         const problem = prompt('Edit Problem:', row.find('td:eq(0)').text());
+//         const solution = prompt('Edit Solution:', row.find('td:eq(1)').text());
+//         const date = prompt('Edit Date (YYYY-MM-DD):', row.find('td:eq(2)').text());
+
+//         if (problem && solution && date) {
+//             $.ajax({
+//                 url: '/add_data',
+//                 method: 'POST',
+//                 contentType: 'application/json',
+//                 data: JSON.stringify({ action: 'edit', rowIndex, problem, solution, date }),
+//                 success: function (response) {
+//                     alert(response.message);
+
+//                     // Update the DataTable row without page reload
+//                     table.cell(row.find('td:eq(0)')).data(problem).draw();
+//                     table.cell(row.find('td:eq(1)')).data(solution).draw();
+//                     table.cell(row.find('td:eq(2)')).data(date).draw();
+//                 },
+//                 error: function (xhr) {
+//                     alert('Error: ' + xhr.responseJSON.message);
+//                 }
+//             });
+//         }
+//     });
+
+//     // Handle delete button click
+//     $('#dataTable').on('click', '.deleteBtn', function () {
+//         const row = $(this).closest('tr');
+//         const rowIndex = table.row(row).index(); // Get the correct index for the row
+
+//         if (confirm('Are you sure you want to delete this entry?')) {
+//             $.ajax({
+//                 url: '/add_data',
+//                 method: 'POST',
+//                 contentType: 'application/json',
+//                 data: JSON.stringify({ action: 'delete', rowIndex }),
+//                 success: function (response) {
+//                     alert(response.message);
+
+//                     // Remove the row from DataTable without page reload
+//                     table.row(row).remove().draw();
+//                 },
+//                 error: function (xhr) {
+//                     alert('Error: ' + xhr.responseJSON.message);
+//                 }
+//             });
+//         }
+//     });
+// });
+
+    </script>
+</body>
+</html>

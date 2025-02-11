@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: #2E2E2E;
+            color: #e0e0e0;
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-container {
+            background-color: #222222;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .form-heading {
+            font-size: 1.8rem;
+            font-family: 'Oswald', sans-serif;
+            text-align: center;
+            color: #f0f0f0;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            color: #a9a9a9;
+        }
+
+        .form-control {
+            background-color: #333333;
+            color: #e0e0e0;
+            border: 1px solid #444444;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            background-color: #00a8ff;
+            color: white;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="form-container">
+            <h1 class="form-heading">Login</h1>
+            <form method="POST" action="/login">
+                <label for="password" class="form-label">Enter Password:</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+            {% if error %}
+                <p class="error-message">{{ error }}</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

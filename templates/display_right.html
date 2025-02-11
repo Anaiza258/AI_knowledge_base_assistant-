@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        /* Fonts and General Styles */
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(124.14deg,rgba(255,252,243,0) 20%,rgba(255,252,243,0.2) 39.82%,rgba(255,252,243,0) 60%),radial-gradient(154% 102% at 85% 32.47%,rgba(255,252,243,0) 49.82%,rgba(230,148,247,0.6) 82.11%),radial-gradient(124% 129% at 35% 78.47%,rgba(255,252,243,0) 49.82%,rgba(255,252,243,0.6) 82.11%),radial-gradient(125% 178% at 25% 4.47%,rgba(255,252,243,0) 49.82%,rgba(255,252,243,0.6) 82.11%),radial-gradient(41.58% 150.68% at 26.01% 45.34%,rgba(255,252,243,0.6) 19.17%,rgba(255,252,243,0) 100%),linear-gradient(84.14deg,rgba(230,148,247,0.2) 2.84%,rgba(247,161,166,0.2) 118.515%),radial-gradient(50% 120% at 100% 14.47%,rgba(175,155,241,0) 6.9%,rgba(211,199,248,0.5) 52.84%,rgba(175,155,241,0) 100%),radial-gradient(56% 120% at 90% 112.47%,rgba(255,155,130,0) 26.9%,rgba(255,155,130,0.8) 72.84%,rgba(255,155,130,0) 100%),radial-gradient(35% 68% at 35% 84.47%,#ffaf9b 49.82%,rgba(251,211,199,0) 82.11%),linear-gradient(84.14deg,#e694f7 2.84%,#f7a1a6 118.515%);
+        }
+
+        .container-center {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .main-heading {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #0049b7;
+            text-transform: uppercase;
+
+            font-family: "Roboto Condensed", serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .subheading {
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #141414;
+
+            font-family: "Roboto Condensed", serif;
+            font-optical-sizing: auto;
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        .form-result-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .query-form {
+            width: 100%;
+            max-width: 600px;
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            background: -webkit-radial-gradient(
+                50% 0%, 
+                70% 20%, 
+                rgba(110, 110, 110, 0.7) 10%, 
+                rgba(20, 20, 20, 0.9) 70%
+            );
+
+            transition:  transform .6s;
+        }
+        .query-form:hover{
+            transform: scale(1.05);
+
+        }
+        .query-form h4{
+            color: #cbcbcb;
+            font-family: "Roboto Condensed", serif;
+            font-optical-sizing: auto;
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        .query-form input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            background-color: #333333;
+            color: #e0e0e0;
+            border: 1px solid #444444;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.3s;
+        }
+
+        .query-form input[type="text"]:focus {
+            border-color: #909090;
+            outline: none;
+        }
+
+        .query-form button {
+            width: 100%;
+            padding: 6px;
+            font-size: 25px;
+            background: linear-gradient(90deg,#bbbbbb,#dfdfdf 47.92%,#ae9cf3);
+
+            font-family: "Oswald", sans-serif !important;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.4s ease-in-out;
+        }
+        .query-form button:hover {
+            transform: scale(0.9);
+        }
+
+        .result-box {
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            /* background-color: #1a1a1a; */
+            background: -webkit-radial-gradient(
+                50% 0%, 
+                70% 20%, 
+                rgba(110, 110, 110, 0.7) -120%, 
+                rgba(14, 20, 31, 0.9) 80%
+            );
+            border-radius: 10px;
+            /* text-align: center; */
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.6);
+            display: none;
+        }
+
+        /* .result-box:hover {
+            background-color: #252525;
+        } */
+
+        .result-box h2 {
+            font-size: 1.5rem;
+            color: #f0f0f0;
+            margin-bottom: 20px;
+        }
+
+        .result-box p {
+            font-size: 1.1rem;
+            color: #c0c0c0;
+        }
+
+        #lessRelevantContainer {
+            margin-top: 20px;
+            padding: 10px;
+            border-top: 1px solid #444;
+        }
+
+        .less-relevant-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: 0.4s;
+        }
+
+        .less-relevant-item:hover {
+            background-color: #252525;
+            box-shadow: 0 8px 10px rgba(38, 64, 124, 0.3);
+        }
+
+        /* Animation for the message above the button */
+        #messageAboveButton {
+            display: none;
+            font-size: 1rem;
+            color: #4981fa;
+            font-weight: bold;
+            margin-bottom: 10px;
+            animation: slideIn 1s ease-in-out;
+
+            font-family: "Roboto Condensed", serif;
+            font-optical-sizing: auto;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .magnet {
+        transition: transform .3s ease;
+        }
+        #loadingbar {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: #333;
+            z-index: 9999; /* Ensure it is on top of the form */
+            font-weight: bold;
+        }
+        .lessrelevent-heading{
+            font-family: "Roboto Condensed", serif;
+            font-optical-sizing: auto;
+            font-weight: 300;
+            font-style: normal;
+        }
+        .solution-headingstyle{
+            font-family: "Roboto Condensed", serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .default-text{
+            font-family: "Roboto Condensed", serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+    .animatedText{
+        font-size: 1.1vw;
+    }
+
+    /* llm response loader  */
+    .dots-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* Space between dots */
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: #b3d4fc;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.dot:nth-child(1) {
+    animation-delay: -0.3s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: -0.1s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.1s;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.8);
+        background-color: #b3d4fc;
+        box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+    }
+    50% {
+        transform: scale(1.2);
+        background-color: #6793fb;
+        box-shadow: 0 0 0 8px rgba(178, 212, 252, 0);
+    }
+    100% {
+        transform: scale(0.8);
+        background-color: #b3d4fc;
+        box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+    }
+}
+
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-center">
+        <h1 class="main-heading">Your Own Assistant</h1>
+        <p class="subheading">Here to assist with personalized knowledge and solutions.</p>
+        <div style="margin-top: -20px; margin-bottom: 15px;"><img src="../static/main-icon.png" width="200" alt="" /></div>
+
+        <div class="form-result-container">
+            <div class="query-form">
+                <form id="queryForm">
+                    <div class=""><h4 ><span class="animatedText"></span>&nbsp;</h4></div>
+                    <input type="text" id="queryInput" placeholder="Ask your question..." required>
+                    <button type="submit">Get Solution</button>
+                </form>
+            </div>
+            <div class="container col-md-8  resultContainer d-none--" id="resultBox---">
+                <div class="result-box" id="resultBox">
+                    <div class="row justify-content-between justify-content-center align-items-center">
+                        <div class="col-4">
+                            <h1 class="text-left text-white fs-3 solution-headingstyle">Solution</h1>
+                        </div>
+                        <div class="col-4">
+                        <p class="text-secondary default-text">Added at: <span class="badge text-bg-light" id="solutionDate"></span></p>
+
+                        </div>
+                    </div>
+                    
+                    <p class="default-text" id="solutionText"></p>
+                    
+                    
+                    <div id="lessRelevantContainer">
+                        <h4 class="fs-5 text-white lessrelevent-heading">Less Relevant Results:</h4>
+                        <div class="default-text" id="lessRelevantResults"></div>
+                    </div>
+                    
+    
+                    <!-- Section for LLM Response -->
+                    <div id="llmResponseContainer" style="display: none; margin-top: 20px;">
+                        <h3 class="badge text-bg-light">Generated Response:</h3>
+                        <p class="default-text" id="llmResponseText"></p>
+                    </div>
+    
+                    <!-- Message above the button -->
+                    <div id="messageAboveButton">Want to use ChatGPT's response? Click below!</div>
+    
+                    <!-- Button to toggle LLM response -->
+                    <button class="btn btn-light" id="toggleLlmResponse" style="margin-top: 15px; display: none;" class="btn btn-info">
+                        Show Generated Response
+                    </button>
+                      
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        
+        $(document).ready(function () {
+    $('.resultContainer').css('display', 'none');
+
+    $('#queryForm').on('submit', function (e) {
+        e.preventDefault();
+        const query = $('#queryInput').val();
+
+        if (!query.trim()) {
+            alert('Please enter a valid query.');
+            return;
+        }
+
+        $('.form-result-container').append('<div id="loadingbar">Just finding your answer...</div>');
+
+        $('.query-form').css('opacity', '1');
+        $('#resultBox').css('opacity', '0.1');
+        $('.resultContainer').css('display', 'block');
+
+        // Animate form shrinking and moving left
+        $('.query-form').animate(
+            {
+                width: '300px',
+                marginLeft: '20px',
+                opacity: '0.1'
+            },
+            {
+                duration: 600,
+                easing: 'swing',
+                complete: function () {
+                    $.ajax({
+                        url: '/get_solution',
+                        method: 'POST',
+                        data: { query: query },
+                        success: function (data) {
+                            $('#solutionText').text(data.solution || 'No solution found.');
+                            $('#solutionDate').text(data.solution_date || 'No date available.');
+                            $('#resultBox').css('opacity', '1');
+
+                            // Display less relevant results
+                            $('#lessRelevantResults').empty();
+                            if (data.less_relevant_results && data.less_relevant_results.length > 0) {
+                                data.less_relevant_results.forEach(item => {
+                                    const itemElement = $('<div>').addClass('less-relevant-item').html(`
+                                        <p><strong>Problem:</strong> ${item.problem}</p>
+                                        <p><strong>Solution:</strong> ${item.solution}</p>
+                                        <p><strong>Date:</strong> ${item.date}</p>
+                                    `);
+                                    $('#lessRelevantResults').append(itemElement);
+                                });
+                            } else {
+                                $('#lessRelevantResults').html("<p>No less relevant results found.</p>");
+                            }
+
+                            // Handle LLM Response Button Logic
+                            if (data.show_llm_button) {
+                                $('#toggleLlmResponse').show();
+                                $('#llmResponseContainer').hide();
+                                $('#messageAboveButton').fadeIn().addClass('slideIn');
+                            } else {
+                                $('#toggleLlmResponse').hide();
+                                $('#llmResponseContainer').hide();
+                                $('#messageAboveButton').fadeOut();
+                            }
+
+                            // Toggle LLM response on button click
+                            $('#toggleLlmResponse').off('click').on('click', function () {
+                                const isVisible = $('#llmResponseContainer').is(':visible');
+                                let $btn = $(this);
+                                let originalText = $btn.text().trim(); // store original button text
+
+                                if (!isVisible) {
+                                    // replace button with dots loader before sending request
+                                    $btn .data('original-text', originalText); // store original text in the data attribute
+                                    $btn.html(`
+                                        <div class="dots-loader">
+                                            <span class="dot"></span>
+                                            <span class="dot"></span>
+                                            <span class="dot"></span>
+                                            <span class="dot"></span>
+                                        </div>
+                                        
+                                    `);
+                                    // Fetch LLM response only when button is clicked
+                                    $.ajax({
+                                        url: '/generate_llm_response',
+                                        method: 'POST',
+                                        data: { query: query },
+                                        success: function (response) {
+                                            $('#llmResponseText').text(response.llm_response || 'No response available.');
+                                            $('#llmResponseContainer').slideDown();
+
+                                        // Restore button text after response is received
+                                            $btn.text('Hide Generated Response');
+                                            $('#messageAboveButton').fadeOut();
+                                        },
+                                        error: function () {
+                                            $btn.text('Show Generated Response'); // Restore original text on error
+                                        }
+                                    });
+                                } else {
+                                    $('#llmResponseContainer').slideUp();
+                                    $btn.text('Show Generated Response');
+                                }
+                            });
+
+                            // Show final result box
+                            $('#resultBox').fadeIn();
+                            $('.query-form').css('opacity', '1');
+                            $('#resultBox').css('opacity', '1');
+                            $('#loadingbar').remove();
+                        },
+                        error: function () {
+                            $('#loadingbar').text('Failed to fetch solution. Please try again.');
+                        }
+                    });
+                }
+            }
+        );
+    });
+});
+
+    
+ 
+ 
+ 
+ 
+ 
+ 
+        const textArray = [
+  "How can I help you today?",
+  "Find out more about your solution",
+  "Type your question here"
+  
+  // Add more strings as needed
+];
+
+// Initialize variables
+let typeJsText = document.querySelector(".animatedText");
+let stringIndex = 0; // Index of the current string in the array
+let charIndex = 0; // Index of the current character in the current string
+let isTyping = true; // Whether we are currently typing or erasing
+let isPaused = false; // Whether we are currently paused
+let pauseStartTime = null; // Timestamp when the pause started
+let currentString = textArray[stringIndex]; // Current string being displayed
+
+function typeJs() {
+  if (isPaused) {
+    // Check if the pause has lasted for 2 seconds
+    if (Date.now() - pauseStartTime >= 2000) {
+      isPaused = false;
+      isTyping = true; // Switch back to typing mode
+      stringIndex++; // Move to the next string
+
+      if (stringIndex >= textArray.length) {
+        stringIndex = 0; // Reset to the beginning of the array
+      }
+
+      currentString = textArray[stringIndex]; // Update the current string
+      charIndex = 0; // Reset character index
+      typeJsText.innerHTML = ""; // Clear the content for the new string
+    }
+  } else if (stringIndex < textArray.length) {
+    // Check if there are more strings to display or erase
+    if (isTyping) {
+      // Typing animation
+      if (charIndex < currentString.length) {
+        typeJsText.innerHTML += currentString.charAt(charIndex);
+        charIndex++;
+      } else {
+        isTyping = false; // Switch to paused mode
+        isPaused = true; // Pause for 2 seconds
+        pauseStartTime = Date.now(); // Record the start time of the pause
+      }
+    }
+  }
+}
+
+// Set an interval to call the typeJs function
+setInterval(typeJs, 20);
+
+
+        // var i = 0;
+        // var texts = [
+        // 'Lorem ipsum dummy text blabla.',
+        // 'This is the second text.',
+        // 'And this is the third text.'
+        // ];
+        // var speed = 50;
+        // var delay = 2000; // delay in milliseconds
+        // var currentText = 0;
+
+        // function typeWriter() {
+        // if (i < texts[currentText].length) {
+        //     document.getElementById("demo").innerHTML += texts[currentText].charAt(i);
+        //     i++;
+        //     setTimeout(typeWriter, speed);
+        // } else {
+        //     setTimeout(function() {
+        //     document.getElementById("demo").innerHTML = '';
+        //     i = 0;
+        //     currentText++;
+        //     if (currentText < texts.length) {
+        //         typeWriter();
+        //     }
+        //     }, delay);
+        // }
+        // }
+
+        // typeWriter();
+    
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/fluffy-factory/magnet-mouse@latest/lib/magnet-mouse.min.js"></script>
+    <script>
+        let mm = new MagnetMouse({
+        magnet: {
+            element: '.magnet'
+        }
+        });
+
+        mm.init();
+    </script>
+</body>
+</html>
