@@ -247,8 +247,6 @@ def add_data():
     data = df.sort_values(by='Date', ascending= False)[['Problems', 'Solutions', 'Date']].to_dict(orient='records')
     return render_template('add_data_dashboard.html', data=data)
 
-
-
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))  # Koyeb provides PORT dynamically
     app.run(host="0.0.0.0", port=port)

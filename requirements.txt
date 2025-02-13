@@ -3,6 +3,5 @@ numpy
 scikit-learn
 Flask 
 python-dotenv
-google-generativeai
 gunicorn
 uvicorn
