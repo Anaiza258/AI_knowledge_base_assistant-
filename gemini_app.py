@@ -20,8 +20,13 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY", "default_secret_key")  # Needed f
 ADD_DATA_PASSWORD = os.getenv("ADD_DATA_PASSWORD", "default_password")
 
 # Load and initialize data
-csv_file = r'D:\AI Projects\ml_app_prob_sol (working)\problems.csv'
-df = pd.read_csv(csv_file, encoding='cp1252')
+csv_file = os.path.join(os.getcwd(), "problems.csv")
+
+if not os.path.exists(csv_file):
+    df = pd.DataFrame(columns=['Problems', 'Solutions', 'Date'])
+    df.to_csv(csv_file, index=False)
+else:
+    df = pd.read_csv(csv_file, encoding='cp1252')
 
 # embed the problems dataset
 def embed_problems(df):
@@ -245,4 +250,5 @@ def add_data():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Koyeb provides PORT dynamically
+    app.run(host="0.0.0.0", port=port)
