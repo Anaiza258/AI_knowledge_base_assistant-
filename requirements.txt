@@ -2,7 +2,6 @@ pandas
 numpy
 scikit-learn
 Flask 
-openai
 python-dotenv
 google-generativeai
 gunicorn
