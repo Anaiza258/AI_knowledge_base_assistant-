@@ -10,7 +10,7 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose the port Flask runs on
-EXPOSE 5000
+EXPOSE 8000
 
 # Run the Flask app with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "gemini_app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "gemini_app:app"]
