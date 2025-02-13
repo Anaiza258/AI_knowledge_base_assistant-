@@ -248,5 +248,5 @@ def add_data():
     return render_template('add_data_dashboard.html', data=data)
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  # Koyeb provides PORT dynamically
+    port = int(os.environ.get("PORT", 8000))  # Koyeb provides PORT dynamically
     app.run(host="0.0.0.0", port=port)
