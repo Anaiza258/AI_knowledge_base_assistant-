@@ -72,10 +72,17 @@ def get_solution():
 # find the query result
 def find_solution(query, df):
     response = genai.embed_content(content=query, model="models/text-embedding-004")
-    query_embedding = response['embedding']
+    query_embedding = np.array(response['embedding'])
 
-    # Compute similarity scores for all problem embeddings
-    similarity_scores = [cosine_similarity([query_embedding],[embedding])[0][0] for embedding in df['Problem_Embeddings']]
+    # Ensure query_embedding is always 2D
+    if query_embedding.ndim == 1:
+        query_embedding = query_embedding.reshape(1, -1)
+
+    # Convert problem embeddings to 2D numpy array (if not already)
+    problem_embeddings = np.vstack(df['Problem_Embeddings'].values)
+
+    # Compute similarity scores
+    similarity_scores = cosine_similarity(query_embedding, problem_embeddings)[0]
 
     # Threshold values
     primary_threshold = 0.8  # for best match
@@ -85,33 +92,33 @@ def find_solution(query, df):
     best_match_idx = np.argmax(similarity_scores)
     best_match_score = similarity_scores[best_match_idx]
 
-    # check if the best match meets the threshold
+    # Check if the best match meets the threshold
     if best_match_score < primary_threshold:
         return "No suitable solution found.", None, []
     
-    # retrieve solution and date for best match
+    # Retrieve solution and date for best match
     solution = df['Solutions'].iloc[best_match_idx]
     solution_date = df['Date'].iloc[best_match_idx]
 
-    # sort all similarity scores with their indexes
+    # Sort all similarity scores with their indexes
     sorted_results = sorted(
         enumerate(similarity_scores), 
-        key = lambda x: x[1],  # sort by similarity score
-        reverse = True  # highest score first
+        key=lambda x: x[1],  # Sort by similarity score
+        reverse=True  # Highest score first
     )
 
-    # fetch the top 2 less relevant results above secondary threshold
-    less_relevant_results =[]
+    # Fetch the top 2 less relevant results above secondary threshold
+    less_relevant_results = []
     for idx, score in sorted_results:
         if idx == best_match_idx:
-            continue   # skip the best match
+            continue  # Skip the best match
         if score >= secondary_threshold:
             less_relevant_results.append({
                 'problem': df['Problems'].iloc[idx],
                 'solution': df['Solutions'].iloc[idx],
                 'date': df['Date'].iloc[idx]
             })
-        if len(less_relevant_results) >= 2:  # limit to 2 results
+        if len(less_relevant_results) >= 2:  # Limit to 2 results
             break
 
     return solution, solution_date, less_relevant_results
