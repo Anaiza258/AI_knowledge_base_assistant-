@@ -26,7 +26,7 @@ if not os.path.exists(csv_file):
     df = pd.DataFrame(columns=['Problems', 'Solutions', 'Date'])
     df.to_csv(csv_file, index=False)
 else:
-    df = pd.read_csv(csv_file, encoding='cp1252')
+    df = pd.read_csv(csv_file, encoding='utf-8', on_bad_lines='skip')
 
 # embed the problems dataset
 def embed_problems(df):
@@ -38,7 +38,12 @@ def embed_problems(df):
     df['Problem_Embeddings'] = embeddings
     return df
 
-df = embed_problems(df)
+try:
+    df = embed_problems(df)
+except Exception as e:
+    print("Error embedding problems:", str(e))
+    df['Problem_Embeddings'] = None  # Avoid breaking the app
+
 
 # home page route
 @app.route('/')

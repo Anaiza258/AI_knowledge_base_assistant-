@@ -13,4 +13,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 # Start the application
-CMD ["gunicorn", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000", "gemini_app:app"]
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:8000", "gemini_app:app"]
