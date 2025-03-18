@@ -5,4 +5,3 @@ Flask
 google-generativeai
 python-dotenv
 gunicorn
-uvicorn
